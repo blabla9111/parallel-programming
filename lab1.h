@@ -1,0 +1,9 @@
+//
+// Created by dinara on 11.03.23.
+//
+
+#ifndef PARALLEL_PROGRAMMING_LAB1_H
+#define PARALLEL_PROGRAMMING_LAB1_H
+
+#endif //PARALLEL_PROGRAMMING_LAB1_H
+
