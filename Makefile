@@ -19,11 +19,11 @@ pcc-seq:
 		pcc -O3 -Wall -Werror -floop-parallelize-all -ftree-parallelize-loops=3 lab1.c -o lab1-pcc-3 -lm
 
 start-gcc:
-		./lab1-seq 100 10 seq
-		./lab1-par-1 100 10 par1
-		./lab1-par-2 100 10 par2
-		./lab1-par-3 100 10 par3
-		./lab1-par-10 100 10 par10
+		./lab1-seq 10000 10 seq
+		./lab1-par-1 10000 10 par1
+		./lab1-par-2 10000 10 par2
+		./lab1-par-3 10000 10 par3
+		./lab1-par-10 10000 10 par10
                 
 test:
 		./lab1 10 10

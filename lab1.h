@@ -15,6 +15,7 @@ void preparing_M2(int n, double array[], double (*func)(double));
 void merge(int array_len, double array[], int merge_array_len, double merge_array[], double (*merge_func)(double, double));
 double reduce(int n, double array[]);
 void insertion_sort(int n, double mass[]);
+void copy_array(double from_array[], double to_array[], int len);
 double cosh_minus_one(double x)
 {
     return cosh(x) - 1;

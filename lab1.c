@@ -65,6 +65,8 @@ int main(int args, char *argv[]) {
 //        delta_ms = 1000 * (T2.tv_sec - T1.tv_sec) + (T2.tv_usec - T1.tv_usec) / 1000;
         // printf("\nN=%d. Milliseconds passed: %ld\n", N1, delta_ms);
 //        fprintf(S2, "%d %ld\n", N1, delta_ms);
+        free(M1);
+        free(M2);
         fprintf(S1, "%d %f\n", i, result);
     }
 
@@ -111,13 +113,20 @@ merge(int array_len, double array[], int merge_array_len, double merge_array[], 
 
 void preparing_M2(int n, double array[], double (*func)(double)) {
     double* tmp_array = malloc(sizeof(double )*n);
-    tmp_array = array;
+    copy_array(array,tmp_array,n);
     for (int j = n - 1; j >= 0; j--) {
         if (j != 0) {
             array[j] =tmp_array[j - 1] + tmp_array[j];
         }
         array[j] = func(array[j]);
         // printf("\narray[%d] = %f", j, array[j]);
+    }
+    free(tmp_array);
+}
+
+void copy_array(double from_array[], double to_array[], int len){
+    for(int i = 0;i<len;i++){
+        to_array[i]=from_array[i];
     }
 }
 
@@ -146,7 +155,8 @@ void generate_array(int n, double array[], int minValue, int maxValue, unsigned 
 }
 
 void insertion_sort(int n, double array[]) {
-    int new_elem, location;
+    double new_elem;
+    int location;
     for (int i = 1; i < n; i++) {
         new_elem = array[i];
         location = i - 1;
