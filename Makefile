@@ -4,6 +4,13 @@ all: lab1
 lab1:
 		gcc lab1.c -o lab1 -lm
 
+fw_lab2:
+		gcc -m64 -c -IFW_1.0_Lin64 lab1.c -lm
+		gcc -m64 -LFW_1.0_Lin64/lib lab1.o -lfwBase -lfwSignal -lm
+
+fw_lab2_clean:
+		rm -f lab1.o
+		rm -f a.out
 
 gcc-seq:
 		gcc -O3 -Wall -Werror lab1.c -o lab1-seq -lm

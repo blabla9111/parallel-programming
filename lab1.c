@@ -22,40 +22,29 @@ int main(int args, char *argv[]) {
     S2 = fopen(delt, "a");
 
     if (N1 == 0 || A == 0) {
-        // printf("One or both args  = 0");
+        printf("One or both args  = 0");
         return -1;
     }
     gettimeofday(&T1, NULL);
-
-    // printf("Hello!");
     for (i = 0; i < 100; i++) {
-//        gettimeofday(&T1, NULL);
-//        srand(i);
-        // printf("i = %d", i);
         unsigned int seed = i;
-        // printf("\n\nStarted to fill M1 ...\n");
-        // POTOKOBEZOPASNOST!!!!!!!!!!!!!!!
-        double* M1 = malloc(sizeof(double )*N1);
-        double* M2 = malloc(sizeof(double )*N2);
+        double *M1 = malloc(sizeof(double) * N1);
+        double *M2 = malloc(sizeof(double) * N2);
 //        double M1[N1], M2[N2];
         generate_array(N1, M1, 1, A, seed);
-
-        // printf("\n\nfunc cosh(num) - 1 to M1 ...\n");
-        do_some_with_all_array_elem(N1, M1, cosh_minus_one);
-
+//        do_some_with_all_array_elem(N1, M1, cosh_minus_one);
+        fw_cosh(N1, M1);
         // printf("\n\nStarted to fill M2 ...\n");
         generate_array(N2, M2, A, 10 * A, seed);
 
         // printf("\n\nfunc M2[i+1]+M2[i] to M2 ...\n");
-        preparing_M2(N2, M2, my_cbrt);
-
+//        preparing_M2(N2, M2, my_cbrt);
+        fw_preparing_M2(N2, M2);
         // printf("\n\nStarted to merge M1 and M2 ...\n");
-        merge(N1, M1, N2, M2, min);
+//        merge(N1, M1, N2, M2, min);
+        fw_merge(N1, M1, N2, M2);
         // printf("\n\nStarted to sort M2 ...\n");
         insertion_sort(N2, M2);
-        // for (int j = 0; j < N2; j++) {
-        // printf("\nM2[%d] = %f\n", j, M2[j]);
-        //}
 
         double result = reduce(N2, M2);
         // printf("\n\n____________________________\nANSWER  =%f\n_______________________________\n\n",
@@ -71,7 +60,7 @@ int main(int args, char *argv[]) {
     }
 
     gettimeofday(&T2, NULL);
-    delta_ms = 1000000*(T2.tv_sec-T1.tv_sec)+T2.tv_usec-T1.tv_usec;
+    delta_ms = 1000000 * (T2.tv_sec - T1.tv_sec) + T2.tv_usec - T1.tv_usec;
 //    delta_ms = 1000 * (T2.tv_sec - T1.tv_sec) + (T2.tv_usec - T1.tv_usec) / 1000;
     printf("\nN=%d. Milliseconds passed: %ld\n", N1, delta_ms);
     fprintf(S2, "%d %ld\n", N1, delta_ms);
@@ -83,57 +72,49 @@ int main(int args, char *argv[]) {
 double reduce(int n, double array[]) {
     double sum_sin_even = 0;
     int min_not_zero_index = find_min_not_zero(n, array);
-    // printf("\nmin_not_zero_index = %d\n", min_not_zero_index);
     if (min_not_zero_index == -1) {
         // printf("\nOnly zeros in array M2\n\n");
         return NAN;
     }
     for (int j = 0; j < n; j++) {
         double div_to_min = array[j] / array[min_not_zero_index];
-        // printf("\ndiv_to_min = %f\n", div_to_min);
         if ((int) floor(div_to_min) % 2 == 0) {
-            // printf("floor %f = %f", div_to_min, floor(div_to_min));
             sum_sin_even = sum_sin_even + sin(array[j]);
         }
     }
-    // printf("\nsum = %f\n", sum_sin_even);
     return sum_sin_even;
 }
 
-void
-merge(int array_len, double array[], int merge_array_len, double merge_array[], double (*merge_func)(double, double)) {
+// double -> float = Bad!!!! Warnings
+void fw_merge(int array_len, double *array, int merge_array_len, double *merge_array) {
     int len = min(array_len, merge_array_len);
-    for (int j = 0; j < len; j++) {
-        // printf("\narray[%d] = %f", j, array[j]);
-        // printf("\nmerge_array[%d] = %f\n", j, merge_array[j]);
-        merge_array[j] = merge_func(array[j], merge_array[j]);
-        // printf("\nM2[%d] = %f\n", j, merge_array[j]);
-    }
+    fwsMinEvery_32f_I(array, merge_array, len);
 }
 
-void preparing_M2(int n, double array[], double (*func)(double)) {
-    double* tmp_array = malloc(sizeof(double )*n);
-    copy_array(array,tmp_array,n);
+void fw_preparing_M2(int n, double *array) {
+    double *tmp_array = malloc(sizeof(double) * n);
+    copy_array(array, tmp_array, n);
     for (int j = n - 1; j >= 0; j--) {
         if (j != 0) {
-            array[j] =tmp_array[j - 1] + tmp_array[j];
+            array[j] = tmp_array[j - 1] + tmp_array[j];
         }
-        array[j] = func(array[j]);
+        array[j] = M_PI * array[j];
         // printf("\narray[%d] = %f", j, array[j]);
     }
     free(tmp_array);
+    fwsCbrt_64f_A53(array, array, n);
 }
 
-void copy_array(double from_array[], double to_array[], int len){
-    for(int i = 0;i<len;i++){
-        to_array[i]=from_array[i];
+void copy_array(double from_array[], double to_array[], int len) {
+    for (int i = 0; i < len; i++) {
+        to_array[i] = from_array[i];
     }
 }
 
-void do_some_with_all_array_elem(int n, double array[], double (*func)(double)) {
-    for (int j = 0; j < n; j++) {
-        array[j] = func(array[j]);
-        // printf("\narray[%d] = %f", j, array[j]);
+void fw_cosh(int n, double *array) {
+    fwsCosh_64f_A53(array, array, n);
+    for (int i = 0; i < n; i++) {
+        array[i] = array[i] - 1;
     }
 }
 
@@ -150,7 +131,6 @@ int find_min_not_zero(int n, double sorted_array[]) {
 void generate_array(int n, double array[], int minValue, int maxValue, unsigned int seed) {
     for (int j = 0; j < n; j++) {
         array[j] = minValue + rand_r(&seed) % maxValue;
-        // printf("\narray[%d] = %f", j, array[j]);
     }
 }
 
