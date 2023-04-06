@@ -10,11 +10,12 @@ int main(int args, char *argv[]) {
     N1 = atoi(argv[1]);
     N2 = N1 / 2;
     A = atoi(argv[2]);
-    printf("Hello!");
+    unsigned int n_thread =atoi(argv[3]);
+    fwSetNumThreads(n_thread);
     FILE *S1, *S2;
     const char *first = "_ans.txt";
     const char *second = "_delt.txt";
-    char *filename = argv[3];
+    char *filename = argv[4];
     char ans[512], delt[512];
     snprintf(ans, sizeof ans, "%s%s", filename, first);
     snprintf(delt, sizeof delt, "%s%s", filename, second);
