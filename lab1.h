@@ -16,16 +16,7 @@ void merge(int array_len, double array[], int merge_array_len, double merge_arra
 double reduce(int n, double array[]);
 void insertion_sort(int n, double mass[]);
 void copy_array(double from_array[], double to_array[], int len);
-double cosh_minus_one(double x)
-{
-    return cosh(x) - 1;
-}
-double my_cbrt(double x)
-{
-    return cbrt(M_PI * x);
-}
-double min(double a, double b)
-{
-    return a >= b ? b : a;
-}
+double cosh_minus_one(double x);
+double my_cbrt(double x);
+double min(double a, double b);
 #endif // PARALLEL_PROGRAMMING_LAB1_H
