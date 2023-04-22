@@ -7,11 +7,23 @@ lab1:
 omp:
 		gcc -O3 -Wall -Werror lab1.c -fopenmp -o lab3_omp -lm
 
+omp_o2:
+		gcc -O2 -Wall -Werror lab1.c -fopenmp -o lab3_omp_o2 -lm
+
+omp_o1:
+		gcc -O1 -Wall -Werror lab1.c -fopenmp -o lab3_omp_o1 -lm
+
+omp_o0:
+		gcc -O0 -Wall -Werror lab1.c -fopenmp -o lab3_omp_o0 -lm
+
 omp_test:
 		./lab3_omp 100 10 test_omp
 
 omp_clean:
 		rm -f lab3_omp
+		rm -f lab3_omp_o0
+		rm -f lab3_omp_o1
+		rm -f lab3_omp_o2
 		rm -f test_omp_ans.txt
 
 gcc-seq:

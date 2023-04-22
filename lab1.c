@@ -5,6 +5,8 @@
 #include <omp.h>
 
 #define N_THREADS 3
+#define SCHEDULE_TYPE dynamic
+#define SCHEDULE_CHUNK_SIZE 100
 
 int main(int args, char *argv[]) {
     int i, N1, N2, A;
@@ -73,7 +75,7 @@ double reduce(int n, double array[]) {
         return NAN;
     }
     int j;
-#pragma omp parallel for default(none) private(j) shared(n, min_not_zero_index, array) reduction(+:sum_sin_even) num_threads(N_THREADS)
+#pragma omp parallel for default(none) private(j) shared(n, min_not_zero_index, array) reduction(+:sum_sin_even) num_threads(N_THREADS) schedule(SCHEDULE_TYPE,SCHEDULE_CHUNK_SIZE)
     for (j = 0; j < n; j++) {
         double div_to_min = array[j] / array[min_not_zero_index];
         // printf("\ndiv_to_min = %f\n", div_to_min);
@@ -89,7 +91,7 @@ void
 merge(int array_len, double array[], int merge_array_len, double merge_array[], double (*merge_func)(double, double)) {
     int len = min(array_len, merge_array_len);
     int j;
-#pragma omp parallel for default(none) private(j) shared(array, merge_array, len, merge_func) num_threads(N_THREADS)
+#pragma omp parallel for default(none) private(j) shared(array, merge_array, len, merge_func) num_threads(N_THREADS) schedule(SCHEDULE_TYPE,SCHEDULE_CHUNK_SIZE)
     for (j = 0; j < len; j++) {
         // printf("\narray[%d] = %f", j, array[j]);
         // printf("\nmerge_array[%d] = %f\n", j, merge_array[j]);
@@ -103,7 +105,7 @@ void preparing_M2(int n, double array[], double (*func)(double)) {
     double *tmp_array = malloc(sizeof(double) * n);
     copy_array(array, tmp_array, n);
     int j;
-#pragma omp parallel for default(none) private(j) shared(array, tmp_array, n, func) num_threads(N_THREADS)
+#pragma omp parallel for default(none) private(j) shared(array, tmp_array, n, func) num_threads(N_THREADS) schedule(SCHEDULE_TYPE,SCHEDULE_CHUNK_SIZE)
     for (j = n - 1; j >= 0; j--) {
         if (j != 0) {
             array[j] = tmp_array[j - 1] + tmp_array[j];
@@ -116,7 +118,7 @@ void preparing_M2(int n, double array[], double (*func)(double)) {
 
 void copy_array(double from_array[], double to_array[], int len) {
     int i;
-#pragma omp parallel for default(none) private(i) shared(from_array, to_array, len) num_threads(N_THREADS)
+#pragma omp parallel for default(none) private(i) shared(from_array, to_array, len) num_threads(N_THREADS) schedule(SCHEDULE_TYPE,SCHEDULE_CHUNK_SIZE)
     for (i = 0; i < len; i++) {
         to_array[i] = from_array[i];
 //        printf("Num threads = %d", omp_get_num_threads());
@@ -125,7 +127,7 @@ void copy_array(double from_array[], double to_array[], int len) {
 
 void do_some_with_all_array_elem(int n, double array[], double (*func)(double)) {
     int j;
-#pragma omp parallel for default(none) private(j) shared(n, array, func) num_threads(N_THREADS)
+#pragma omp parallel for default(none) private(j) shared(n, array, func) num_threads(N_THREADS) schedule(SCHEDULE_TYPE,SCHEDULE_CHUNK_SIZE)
     for (j = 0; j < n; j++) {
         array[j] = func(array[j]);
         // printf("\narray[%d] = %f", j, array[j]);
