@@ -19,4 +19,7 @@ void copy_array(double from_array[], double to_array[], int len);
 double cosh_minus_one(double x);
 double my_cbrt(double x);
 double min(double a, double b);
+
+void my_q_sort(int n, double array[]);
+void quick_sort_parallel(int left, int right, double array[]);
 #endif // PARALLEL_PROGRAMMING_LAB1_H
